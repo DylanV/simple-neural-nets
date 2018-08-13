@@ -10,7 +10,7 @@ import numpy as np
 
 class MNISTLoader:
 
-    def __init__(self, data_cache_dir: str = os.path.join('data', 'mnist')):
+    def __init__(self, data_cache_dir: str = os.path.join(os.getcwd(), 'data', 'mnist')):
         """Utility for loading the MNIST dataset from Yann LeCunn's website
 
         Parameters
@@ -36,7 +36,7 @@ class MNISTLoader:
     def _download_dataset(self):
         """Download the MNIST dataset if it is not already cached"""
         try:
-            os.mkdir(self.data_cache_dir)
+            os.makedirs(self.data_cache_dir)
         except FileExistsError:
             pass
 
