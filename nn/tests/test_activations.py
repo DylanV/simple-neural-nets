@@ -2,7 +2,7 @@
 
 import numpy.testing as npt
 
-from src.activations import *
+from nn.activations import *
 
 
 def test_sigmoid_float():
