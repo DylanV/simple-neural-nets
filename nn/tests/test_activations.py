@@ -30,8 +30,7 @@ def test_sigmoid_ndarray():
 
 
 def test_sigmoid_derivative():
+    npt.assert_equal(sigmoid_derivative(0), 0.25)
     npt.assert_almost_equal(sigmoid_derivative(0), finite_difference_derivative(sigmoid, 0))
     npt.assert_almost_equal(sigmoid_derivative(3), finite_difference_derivative(sigmoid, 3))
     npt.assert_almost_equal(sigmoid_derivative(-3), finite_difference_derivative(sigmoid, -3))
-
-
