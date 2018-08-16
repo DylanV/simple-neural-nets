@@ -76,7 +76,7 @@ class MNISTLoader:
         """
         self._download_dataset()  # Make sure the files are downloaded
 
-        data = self._load_idx_file(os.path.join(self.data_cache_dir, self.train_images_filename))
+        data = self._load_idx_file(os.path.join(self.data_cache_dir, self.train_images_filename)) / 255
         labels = self._load_idx_file(os.path.join(self.data_cache_dir, self.train_labels_filename))
 
         return data, labels
@@ -92,7 +92,7 @@ class MNISTLoader:
         """
         self._download_dataset()  # Make sure the files are downloaded
 
-        data = self._load_idx_file(os.path.join(self.data_cache_dir, self.test_images_filename))
+        data = self._load_idx_file(os.path.join(self.data_cache_dir, self.test_images_filename)) / 255
         labels = self._load_idx_file(os.path.join(self.data_cache_dir, self.test_labels_filename))
 
         return data, labels
