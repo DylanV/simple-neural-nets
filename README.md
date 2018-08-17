@@ -1,5 +1,5 @@
 # simple-neural-nets
-Basic implementation of neural network concepts.
+Basic implementation of neural network concepts. Focus on readability over performance. 
 
 ## Setup
 Run `conda env create environment.yml` in the top level directory
@@ -7,7 +7,9 @@ then `activate nn` or `source activate nn` to activate the environment
 
 ## Currently Implemented
 ### General
-* Generic fully connected networks with arbitrary layers
+* Generic fully connected networks with arbitrary layers.
+* Finite difference gradient checker.
+* Unit tests, most individual components are unit tested.
 ### Activations
 * Sigmoid (logistic)
 * Tanh

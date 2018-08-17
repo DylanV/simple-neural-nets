@@ -3,7 +3,7 @@
 from typing import Callable
 
 
-def finite_difference_derivative(func: Callable, x: float, h: float=1e-8) -> float:
+def finite_difference_derivative(func: Callable, x: float, h: float=1e-6) -> float:
     """Estimate the derivative of a function at a given value using the finite difference method.
 
     Parameters
@@ -20,4 +20,4 @@ def finite_difference_derivative(func: Callable, x: float, h: float=1e-8) -> flo
     estimated derivative : float
 
     """
-    return (func(x + h) - func(x)) / h
+    return (func(x + h) - func(x - h)) / (2 * h)

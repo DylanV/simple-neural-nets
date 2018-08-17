@@ -58,6 +58,5 @@ def test_relu_derivative():
     x = np.asarray([[0, 2, -3], [-4, 5, -6], [7, 8, 9]])
     d_x = np.asarray([[1, 1, 0], [0, 1, 0], [1, 1, 1]])
     npt.assert_array_equal(relu_derivative(x), d_x)
-    npt.assert_almost_equal(relu_derivative(np.asarray([0])), finite_difference_derivative(relu, 0))
     npt.assert_almost_equal(relu_derivative(np.asarray([3])), finite_difference_derivative(relu, 3))
     npt.assert_almost_equal(relu_derivative(np.asarray([-3])), finite_difference_derivative(relu, -3))
