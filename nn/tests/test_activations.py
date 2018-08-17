@@ -3,7 +3,7 @@
 import numpy as np
 import numpy.testing as npt
 
-from nn.activations import sigmoid, sigmoid_derivative, tanh, tanh_derivative
+from nn.activations import sigmoid, sigmoid_derivative, tanh, tanh_derivative, relu, relu_derivative
 from nn.utils import finite_difference_derivative
 
 
@@ -41,3 +41,23 @@ def test_tanh_derivative():
     npt.assert_almost_equal(tanh_derivative(np.asarray([0])), finite_difference_derivative(tanh, 0))
     npt.assert_almost_equal(tanh_derivative(np.asarray([3])), finite_difference_derivative(tanh, 3))
     npt.assert_almost_equal(tanh_derivative(np.asarray([-3])), finite_difference_derivative(tanh, -3))
+
+
+def test_relu():
+    npt.assert_array_equal(relu(np.full((3, ), -1)), np.zeros(3))
+    npt.assert_array_equal(relu(np.full((3, 1), 2)), np.full((3, 1), 2))
+    x = np.asarray([[1, 2, -3], [-4, 5, -6], [7, 8, 9]])
+    y = np.asarray([[1, 2, 0], [0, 5, 0], [7, 8, 9]])
+    npt.assert_array_equal(relu(x), y)
+
+
+def test_relu_derivative():
+    npt.assert_array_equal(relu_derivative(np.full((3, ), -1)), np.zeros(3))
+    npt.assert_array_equal(relu_derivative(np.full((3, 1), 2)), np.ones((3, 1)))
+    npt.assert_array_equal(relu_derivative(np.zeros((3, 3))), np.ones((3, 3)))
+    x = np.asarray([[0, 2, -3], [-4, 5, -6], [7, 8, 9]])
+    d_x = np.asarray([[1, 1, 0], [0, 1, 0], [1, 1, 1]])
+    npt.assert_array_equal(relu_derivative(x), d_x)
+    npt.assert_almost_equal(relu_derivative(np.asarray([0])), finite_difference_derivative(relu, 0))
+    npt.assert_almost_equal(relu_derivative(np.asarray([3])), finite_difference_derivative(relu, 3))
+    npt.assert_almost_equal(relu_derivative(np.asarray([-3])), finite_difference_derivative(relu, -3))

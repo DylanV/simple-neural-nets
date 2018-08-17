@@ -11,6 +11,7 @@ then `activate nn` or `source activate nn` to activate the environment
 ### Activations
 * Sigmoid (logistic)
 * Tanh
+* Rectified Linear Unit (ReLU) 
 ### Cost/Loss Functions
 * Mean squared error (MSE)
 ### Optimization

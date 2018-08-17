@@ -64,3 +64,34 @@ def tanh_derivative(x: np.ndarray) -> np.ndarray:
 
     """
     return 1 - tanh(x) ** 2
+
+
+def relu(x: np.ndarray) -> np.ndarray:
+    """Rectified Linear Unit.
+    Computes max(0, x) i.e. negative values of x are set to zero.
+
+    Parameters
+    ----------
+    x : ndarray of float
+
+    Returns
+    -------
+    out : ndarray of float
+
+    """
+    return np.maximum(0, x)
+
+
+def relu_derivative(x: np.ndarray) -> np.ndarray:
+    """Compute the derivative of the ReLU function with respect to it's input at x.
+
+    Parameters
+    ----------
+    x : ndarray of float
+
+    Returns
+    -------
+    derivative : ndarray of float
+
+    """
+    return np.asarray(x >= 0, np.float)
