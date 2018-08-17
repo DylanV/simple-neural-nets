@@ -1,11 +1,9 @@
 """Nonlinear activation functions."""
 
-from typing import Union
-
 import numpy as np
 
 
-def sigmoid(x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+def sigmoid(x: np.ndarray) -> np.ndarray:
     """Compute the logistic function for a given input x.
 
     Parameters
@@ -21,7 +19,7 @@ def sigmoid(x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
     return 1 / (1 + np.exp(-x))
 
 
-def sigmoid_derivative(x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+def sigmoid_derivative(x: np.ndarray) -> np.ndarray:
     """Compute the derivative of the sigmoid function for the given input x.
 
     Parameters

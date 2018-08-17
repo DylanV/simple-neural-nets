@@ -7,18 +7,7 @@ from nn.activations import sigmoid, sigmoid_derivative
 from nn.utils import finite_difference_derivative
 
 
-def test_sigmoid_float():
-    # Intercept at exactly 0.5
-    npt.assert_equal(sigmoid(0), 0.5)
-    # Check the limit on the positive side goes to 1
-    npt.assert_almost_equal(sigmoid(6), 1, decimal=2)
-    npt.assert_almost_equal(sigmoid(10), 1, decimal=4)
-    # Check the limit on the negative side goes to 0
-    npt.assert_almost_equal(sigmoid(-6), 0, decimal=2)
-    npt.assert_almost_equal(sigmoid(-10), 0, decimal=4)
-
-
-def test_sigmoid_ndarray():
+def test_sigmoid():
     # Intercept at exactly 0.5
     npt.assert_equal(np.full(2, 0.5), sigmoid(np.zeros(2)))
     # Check limits
