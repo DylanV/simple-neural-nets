@@ -9,7 +9,8 @@ then `activate nn` or `source activate nn` to activate the environment
 ### General
 * Generic fully connected networks with arbitrary layers
 ### Activations
-* Sigmoid
+* Sigmoid (logistic)
+* Tanh
 ### Cost/Loss Functions
 * Mean squared error (MSE)
 ### Optimization

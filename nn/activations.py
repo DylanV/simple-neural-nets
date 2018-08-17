@@ -34,3 +34,33 @@ def sigmoid_derivative(x: np.ndarray) -> np.ndarray:
 
     """
     return sigmoid(x) * (1 - sigmoid(x))
+
+
+def tanh(x: np.ndarray) -> np.ndarray:
+    """Compute the nonlinear tanh function for the input x.
+
+    Parameters
+    ----------
+    x : ndarray of float
+
+    Returns
+    -------
+    activation : ndarray of float
+
+    """
+    return -1 + 2 / (1 + np.exp(-2 * x))
+
+
+def tanh_derivative(x: np.ndarray) -> np.ndarray:
+    """Compute the derivate of the tanh function at x.
+
+    Parameters
+    ----------
+    x : ndarray of float
+
+    Returns
+    -------
+    derivative : ndarray of float
+
+    """
+    return 1 - tanh(x) ** 2
