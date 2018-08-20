@@ -1,0 +1,5 @@
+[flake8]
+ignore = D205, D400, D401, T003
+max-line-length = 120
+application-import-names = nn
+import-order-style = google
