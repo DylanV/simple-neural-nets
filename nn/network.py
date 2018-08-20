@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from nn.activations import sigmoid, sigmoid_derivative
 from nn.cost import MSE, MSE_derivative
-from nn.weights import random_weight_init
+from nn.weights import initailise_weights
 
 
 class Network:
@@ -25,7 +25,7 @@ class Network:
         self.weights = []
         self.biases = []
         for i in range(1, len(layers)):
-            self.weights.append(random_weight_init((layers[i - 1], layers[i])))
+            self.weights.append(initailise_weights((layers[i - 1], layers[i])))
             self.biases.append(np.zeros((1, layers[i])))
 
     def forward(self, batch: np.ndarray) -> np.ndarray:
