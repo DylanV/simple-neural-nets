@@ -23,5 +23,7 @@ then `activate nn` or `source activate nn` to activate the environment
 * Dropout
 ### Weight initialisation
 * Random
+* Xavier
+* He
 ### Data loaders
 * Automatic downloading and loading of MNIST data

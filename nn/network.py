@@ -25,7 +25,7 @@ class Network:
         self.weights = []
         self.biases = []
         for i in range(1, len(layers)):
-            self.weights.append(initailise_weights((layers[i - 1], layers[i])))
+            self.weights.append(initailise_weights((layers[i - 1], layers[i]), method='xavier-average'))
             self.biases.append(np.zeros((1, layers[i])))
 
     def forward(self, batch: np.ndarray) -> np.ndarray:
