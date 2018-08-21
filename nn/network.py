@@ -8,7 +8,7 @@ import numpy as np
 from tqdm import tqdm
 
 from nn.activations import sigmoid, sigmoid_derivative
-from nn.cost import MSE, MSE_derivative
+from nn.cost import MSE
 from nn.weights import initailise_weights
 
 
@@ -27,6 +27,8 @@ class Network:
         for i in range(1, len(layers)):
             self.weights.append(initailise_weights((layers[i - 1], layers[i]), method='xavier-average'))
             self.biases.append(np.zeros((1, layers[i])))
+
+        self.loss = MSE()
 
     def forward(self, batch: np.ndarray) -> np.ndarray:
         """Do a forward pass of the network with the current weights.
@@ -83,13 +85,13 @@ class Network:
             activations.append(activation)
 
         # Now do the backwards pass
-        cost = np.mean(MSE(activations[-1], targets))
+        cost = np.mean(self.loss.forward(activations[-1], targets))
 
         weight_gradients = deque()
         bias_gradients = deque()
 
         # Do the output layer error first because it's slightly different to the others
-        error = MSE_derivative(activations[-1], targets) * sigmoid_derivative(zs[-1])
+        error = self.loss.backward(activations[-1], targets) * sigmoid_derivative(zs[-1])
         for l in range(2, len(self.weights) + 2):
             # Calculate the gradients from the error
             bias_gradients.appendleft(np.sum(error, 0))
