@@ -17,8 +17,9 @@ then `activate nn` or `source activate nn` to activate the environment
 ### Cost/Loss Functions
 * Mean squared error (MSE)
 ### Optimization
-* Stochastic gradient descent (SGD)
+* Mini-batch Stochastic Gradient Descent (SGD)
 ### Regularisation
+* L1
 * L2
 * Dropout
 ### Weight initialisation

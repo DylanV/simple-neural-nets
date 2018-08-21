@@ -93,7 +93,9 @@ class Network:
 
         return cost, list(weight_gradients), list(bias_gradients)
 
-    def fit(self, data, targets, epochs=10, batch_size=5, learning_rate=1e-3):
+    def fit(self, data: np.ndarray, targets: np.ndarray,
+            epochs: int=10, batch_size: int=5, learning_rate: float=1e-3,
+            regularisation_weight: float=1e-6, regulariser: str='L2'):
         """Use mini-batch SGD to learn the weights and biases of the network.
 
         Parameters
@@ -108,6 +110,10 @@ class Network:
             Number of training examples per mini-batch
         learning_rate : float
             The learning rate
+        regularisation_weight : float
+            How strongly the regularisation is applied
+        regulariser : {'L1', 'L2'}
+            Type of regularization to use
 
         """
         num_samples = data.shape[0]
@@ -121,9 +127,16 @@ class Network:
             batches = np.split(idxes, batch_starts)
             for batch in tqdm(batches, leave=False, desc=f'Epoch {epoch:2d}: '):
                 cost, weight_gradients, bias_gradients = self.backward(data[batch], targets[batch])
-                # Update the weights
+                # Update the parameters
                 for i in range(len(self.weights)):
-                    self.weights[i] -= learning_rate * (1 / batch_size) * weight_gradients[i]
-                    self.biases[i] -= learning_rate * (1 / batch_size) * bias_gradients[i]
+                    delta = learning_rate / batch_size
+                    # Do any regularization
+                    if regulariser == 'L1':
+                        self.weights[i] -= delta * regularisation_weight * np.sign(self.weights[i])
+                    elif regulariser == 'L2':
+                        self.weights[i] -= regularisation_weight * delta * self.weights[i]
+                    # Step down the gradient
+                    self.weights[i] -= delta * weight_gradients[i]
+                    self.biases[i] -= delta * bias_gradients[i]
             sleep(0.01)  # Tiny sleep so the progress bar updates correctly
             print(f'Epoch {epoch:2d}: {cost:0.2e}')
