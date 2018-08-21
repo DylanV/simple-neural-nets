@@ -49,7 +49,8 @@ class Network:
             activations = sigmoid(np.dot(activations, weights) + biases)
         return activations
 
-    def backward(self, batch, targets) -> Tuple[np.ndarray, List[np.ndarray], List[np.ndarray]]:
+    def backward(self, batch: np.ndarray, targets: np.ndarray,
+                 dropout_p: float=0.5) -> Tuple[np.ndarray, List[np.ndarray], List[np.ndarray]]:
         """Use backpropagation to calculate the gradients for the model parameters.
 
         Parameters
@@ -60,6 +61,8 @@ class Network:
         targets : ndarray
             The true values for the training data
             Shape: [batch_size x output_layer_size]
+        dropout_p : float
+            The dropout probability, i.e. neurons are turned off with p=dropout_p
 
         Returns
         -------
@@ -73,6 +76,10 @@ class Network:
         for weights, biases in zip(self.weights, self.biases):
             zs.append(np.dot(activations[-1], weights) + biases)
             activation = sigmoid(zs[-1])
+            # Apply dropout to all layers except the last output layer
+            if dropout_p > 0 and len(activations) < len(self.weights):
+                dropout_mask = (np.random.rand(*activation.shape) < dropout_p) / dropout_p
+                activation *= dropout_mask
             activations.append(activation)
 
         # Now do the backwards pass
@@ -95,7 +102,7 @@ class Network:
 
     def fit(self, data: np.ndarray, targets: np.ndarray,
             epochs: int=10, batch_size: int=5, learning_rate: float=1e-3,
-            regularisation_weight: float=1e-6, regulariser: str='L2'):
+            regularisation_weight: float=1e-6, regulariser: str='L2', dropout_p: float=0.5):
         """Use mini-batch SGD to learn the weights and biases of the network.
 
         Parameters
@@ -114,6 +121,8 @@ class Network:
             How strongly the regularisation is applied
         regulariser : {'L1', 'L2'}
             Type of regularization to use
+        dropout_p : float
+            The dropout probability, i.e. neurons are turned off with p=dropout_p
 
         """
         num_samples = data.shape[0]
@@ -126,7 +135,7 @@ class Network:
             np.random.shuffle(idxes)
             batches = np.split(idxes, batch_starts)
             for batch in tqdm(batches, leave=False, desc=f'Epoch {epoch:2d}: '):
-                cost, weight_gradients, bias_gradients = self.backward(data[batch], targets[batch])
+                cost, weight_gradients, bias_gradients = self.backward(data[batch], targets[batch], dropout_p=dropout_p)
                 # Update the parameters
                 for i in range(len(self.weights)):
                     delta = learning_rate / batch_size
