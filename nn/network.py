@@ -7,7 +7,7 @@ from typing import List, Tuple
 import numpy as np
 from tqdm import tqdm
 
-from nn.activations import sigmoid, sigmoid_derivative
+from nn.activations import Sigmoid
 from nn.cost import MSE
 from nn.weights import initailise_weights
 
@@ -29,6 +29,7 @@ class Network:
             self.biases.append(np.zeros((1, layers[i])))
 
         self.loss = MSE()
+        self.activation = Sigmoid()
 
     def forward(self, batch: np.ndarray) -> np.ndarray:
         """Do a forward pass of the network with the current weights.
@@ -48,7 +49,7 @@ class Network:
         """
         activations = batch
         for weights, biases in zip(self.weights, self.biases):
-            activations = sigmoid(np.dot(activations, weights) + biases)
+            activations = self.activation.forward(np.dot(activations, weights) + biases)
         return activations
 
     def backward(self, batch: np.ndarray, targets: np.ndarray,
@@ -77,7 +78,7 @@ class Network:
         zs, activations = [], [batch]
         for weights, biases in zip(self.weights, self.biases):
             zs.append(np.dot(activations[-1], weights) + biases)
-            activation = sigmoid(zs[-1])
+            activation = self.activation.forward(zs[-1])
             # Apply dropout to all layers except the last output layer
             if dropout_p > 0 and len(activations) < len(self.weights):
                 dropout_mask = (np.random.rand(*activation.shape) < dropout_p) / dropout_p
@@ -91,14 +92,14 @@ class Network:
         bias_gradients = deque()
 
         # Do the output layer error first because it's slightly different to the others
-        error = self.loss.backward(activations[-1], targets) * sigmoid_derivative(zs[-1])
+        error = self.loss.backward(activations[-1], targets) * self.activation.backward(zs[-1])
         for l in range(2, len(self.weights) + 2):
             # Calculate the gradients from the error
             bias_gradients.appendleft(np.sum(error, 0))
             weight_gradients.appendleft(np.dot(activations[-l].T, error))
             # Backpropagate the error until we get the input layer
             if not l > len(zs):
-                error = np.dot(error, self.weights[-l + 1].T) * sigmoid_derivative(zs[-l])
+                error = np.dot(error, self.weights[-l + 1].T) * self.activation.backward(zs[-l])
 
         return cost, list(weight_gradients), list(bias_gradients)
 

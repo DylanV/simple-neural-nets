@@ -3,95 +3,107 @@
 import numpy as np
 
 
-def sigmoid(x: np.ndarray) -> np.ndarray:
-    """Compute the logistic function for a given input x.
+class Sigmoid:
+    """Logistic activation"""
 
-    Parameters
-    ----------
-    x : ndarray of float
+    @staticmethod
+    def forward(x: np.ndarray) -> np.ndarray:
+        """Compute the logistic function for a given input x.
 
-    Returns
-    -------
-    activation : ndarray
-       the sigmoid of x
+        Parameters
+        ----------
+        x : ndarray of float
 
-    """
-    return 1 / (1 + np.exp(-x))
+        Returns
+        -------
+        activation : ndarray
+           the sigmoid of x
 
+        """
+        return 1 / (1 + np.exp(-x))
 
-def sigmoid_derivative(x: np.ndarray) -> np.ndarray:
-    """Compute the derivative of the sigmoid function for the given input x.
+    @staticmethod
+    def backward(x: np.ndarray) -> np.ndarray:
+        """Compute the derivative of the sigmoid function for the given input x.
 
-    Parameters
-    ----------
-    x : ndarray of float
-        Where the derivative will be evaluated
+        Parameters
+        ----------
+        x : ndarray of float
+            Where the derivative will be evaluated
 
-    Returns
-    -------
-    derivative : ndarray of float
-        The derivative of the sigmoid function at x
+        Returns
+        -------
+        derivative : ndarray of float
+            The derivative of the sigmoid function at x
 
-    """
-    return sigmoid(x) * (1 - sigmoid(x))
-
-
-def tanh(x: np.ndarray) -> np.ndarray:
-    """Compute the nonlinear tanh function for the input x.
-
-    Parameters
-    ----------
-    x : ndarray of float
-
-    Returns
-    -------
-    activation : ndarray of float
-
-    """
-    return -1 + 2 / (1 + np.exp(-2 * x))
+        """
+        return 1 / (1 + np.exp(-x)) * (1 - 1 / (1 + np.exp(-x)))
 
 
-def tanh_derivative(x: np.ndarray) -> np.ndarray:
-    """Compute the derivate of the tanh function at x.
+class Tanh:
+    """Tanh activation"""
 
-    Parameters
-    ----------
-    x : ndarray of float
+    @staticmethod
+    def forward(x: np.ndarray) -> np.ndarray:
+        """Compute the nonlinear tanh function for the input x.
 
-    Returns
-    -------
-    derivative : ndarray of float
+        Parameters
+        ----------
+        x : ndarray of float
 
-    """
-    return 1 - tanh(x) ** 2
+        Returns
+        -------
+        activation : ndarray of float
+
+        """
+        return -1 + 2 / (1 + np.exp(-2 * x))
+
+    @staticmethod
+    def backward(x: np.ndarray) -> np.ndarray:
+        """Compute the derivative of the tanh function at x.
+
+        Parameters
+        ----------
+        x : ndarray of float
+
+        Returns
+        -------
+        derivative : ndarray of float
+
+        """
+        return 1 - (-1 + 2 / (1 + np.exp(-2 * x))) ** 2
 
 
-def relu(x: np.ndarray) -> np.ndarray:
-    """Rectified Linear Unit.
-    Computes max(0, x) i.e. negative values of x are set to zero.
+class ReLU:
+    """Rectified Linear Unit activation"""
 
-    Parameters
-    ----------
-    x : ndarray of float
+    @staticmethod
+    def forward(x: np.ndarray) -> np.ndarray:
+        """Rectified Linear Unit.
+        Computes max(0, x) i.e. negative values of x are set to zero.
 
-    Returns
-    -------
-    out : ndarray of float
+        Parameters
+        ----------
+        x : ndarray of float
 
-    """
-    return np.maximum(0, x)
+        Returns
+        -------
+        out : ndarray of float
 
+        """
+        return np.maximum(0, x)
 
-def relu_derivative(x: np.ndarray) -> np.ndarray:
-    """Compute the derivative of the ReLU function with respect to it's input at x.
+    @staticmethod
+    def backward(x: np.ndarray) -> np.ndarray:
+        """Compute the derivative of the ReLU function with respect to it's input at x.
 
-    Parameters
-    ----------
-    x : ndarray of float
+        Parameters
+        ----------
+        x : ndarray of float
 
-    Returns
-    -------
-    derivative : ndarray of float
+        Returns
+        -------
+        derivative : ndarray of float
 
-    """
-    return np.asarray(x >= 0, np.float)
+        """
+        return np.asarray(x >= 0, np.float)
