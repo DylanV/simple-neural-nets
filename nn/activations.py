@@ -9,6 +9,11 @@ from nn.weights import initialise_weights
 
 class Activation(ABC):
 
+    @property
+    @abstractmethod
+    def trainable(self) -> bool:
+        pass
+
     @abstractmethod
     def forward(self, x: np.ndarray) -> np.ndarray:
         pass
@@ -28,6 +33,10 @@ class Linear(Activation):
         self._cached_activations = None
         self._weight_gradients = np.zeros(self.weights.shape)
         self._bias_gradients = np.zeros(self.biases.shape)
+
+    @property
+    def trainable(self) -> bool:
+        return True
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         activations = np.dot(x, self.weights) + self.biases
@@ -50,6 +59,10 @@ class Sigmoid(Activation):
     @staticmethod
     def _sigmoid(x: np.ndarray) -> np.ndarray:
         return 1 / (1 + np.exp(-x))
+
+    @property
+    def trainable(self) -> bool:
+        return False
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """Compute the logistic function for a given input x.
@@ -91,6 +104,10 @@ class Tanh(Activation):
     def __init__(self):
         self._cached_input = None
 
+    @property
+    def trainable(self) -> bool:
+        return False
+
     @staticmethod
     def _tanh(x: np.ndarray) -> np.ndarray:
         return -1 + 2 / (1 + np.exp(-2 * x))
@@ -130,6 +147,10 @@ class ReLU(Activation):
 
     def __init__(self):
         self.cached_input = None
+
+    @property
+    def trainable(self) -> bool:
+        return False
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """Rectified Linear Unit.
