@@ -144,6 +144,7 @@ class ReLU(Activation):
         out : ndarray of float
 
         """
+        self.cached_input = x
         return np.maximum(0, x)
 
     def backward(self, error: np.ndarray) -> np.ndarray:
