@@ -1,13 +1,28 @@
 """Nonlinear activation functions."""
 
 import numpy as np
+from abc import ABC, abstractmethod
 
 
-class Sigmoid:
-    """Logistic activation"""
+class Activation(ABC):
+
+    @abstractmethod
+    def forward(self, x: np.ndarray) -> np.ndarray:
+        pass
+
+    @abstractmethod
+    def backward(self, x: np.ndarray) -> np.ndarray:
+        pass
+
+
+class Sigmoid(Activation):
+    """Logistic sigmoid activation"""
 
     @staticmethod
-    def forward(x: np.ndarray) -> np.ndarray:
+    def _sigmoid(x: np.ndarray) -> np.ndarray:
+        return 1 / (1 + np.exp(-x))
+
+    def forward(self, x: np.ndarray) -> np.ndarray:
         """Compute the logistic function for a given input x.
 
         Parameters
@@ -20,10 +35,9 @@ class Sigmoid:
            the sigmoid of x
 
         """
-        return 1 / (1 + np.exp(-x))
+        return self._sigmoid(x)
 
-    @staticmethod
-    def backward(x: np.ndarray) -> np.ndarray:
+    def backward(self, x: np.ndarray) -> np.ndarray:
         """Compute the derivative of the sigmoid function for the given input x.
 
         Parameters
@@ -37,14 +51,17 @@ class Sigmoid:
             The derivative of the sigmoid function at x
 
         """
-        return 1 / (1 + np.exp(-x)) * (1 - 1 / (1 + np.exp(-x)))
+        return self._sigmoid(x) * (1 - self._sigmoid(x))
 
 
-class Tanh:
+class Tanh(Activation):
     """Tanh activation"""
 
     @staticmethod
-    def forward(x: np.ndarray) -> np.ndarray:
+    def _tanh(x: np.ndarray) -> np.ndarray:
+        return -1 + 2 / (1 + np.exp(-2 * x))
+
+    def forward(self, x: np.ndarray) -> np.ndarray:
         """Compute the nonlinear tanh function for the input x.
 
         Parameters
@@ -56,10 +73,9 @@ class Tanh:
         activation : ndarray of float
 
         """
-        return -1 + 2 / (1 + np.exp(-2 * x))
+        return self._tanh(x)
 
-    @staticmethod
-    def backward(x: np.ndarray) -> np.ndarray:
+    def backward(self, x: np.ndarray) -> np.ndarray:
         """Compute the derivative of the tanh function at x.
 
         Parameters
@@ -71,14 +87,13 @@ class Tanh:
         derivative : ndarray of float
 
         """
-        return 1 - (-1 + 2 / (1 + np.exp(-2 * x))) ** 2
+        return 1 - self._tanh(x) ** 2
 
 
-class ReLU:
+class ReLU(Activation):
     """Rectified Linear Unit activation"""
 
-    @staticmethod
-    def forward(x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray) -> np.ndarray:
         """Rectified Linear Unit.
         Computes max(0, x) i.e. negative values of x are set to zero.
 
@@ -93,8 +108,7 @@ class ReLU:
         """
         return np.maximum(0, x)
 
-    @staticmethod
-    def backward(x: np.ndarray) -> np.ndarray:
+    def backward(self, x: np.ndarray) -> np.ndarray:
         """Compute the derivative of the ReLU function with respect to it's input at x.
 
         Parameters
