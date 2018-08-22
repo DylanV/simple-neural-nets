@@ -4,7 +4,8 @@ from typing import Tuple
 
 import numpy as np
 
-def initailise_weights(size : Tuple, method='gauss') -> np.ndarray:
+
+def initialise_weights(size: Tuple, method: str='gauss') -> np.ndarray:
     """Randomly initialise a weight matrix of a given size
 
     Parameters
