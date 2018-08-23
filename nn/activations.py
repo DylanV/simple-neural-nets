@@ -11,14 +11,16 @@ from nn.weights import initialise_weights
 class Activation(ABC):
 
     @property
-    @abstractmethod
     def trainable(self) -> bool:
-        pass
+        return False
 
     @property
-    @abstractmethod
-    def gradient(self) -> List[Union[None, np.ndarray]]:
-        pass
+    def gradients(self) -> List[np.ndarray]:
+        return []
+
+    @property
+    def parameters(self) -> List[np.ndarray]:
+        return []
 
     @abstractmethod
     def forward(self, x: np.ndarray) -> np.ndarray:
@@ -36,7 +38,7 @@ class Linear(Activation):
         self.weights = initialise_weights((in_size, out_size), method=initialisation_method)
         self.biases = np.zeros((1, out_size))
 
-        self._cached_activations = None
+        self._cached_input = None
         self._weight_gradients = np.zeros(self.weights.shape)
         self._bias_gradients = np.zeros(self.biases.shape)
 
@@ -45,18 +47,22 @@ class Linear(Activation):
         return True
 
     @property
-    def gradient(self) -> List[np.ndarray]:
+    def gradients(self) -> List[np.ndarray]:
         return [self._weight_gradients, self._bias_gradients]
+
+    @property
+    def parameters(self) -> List[np.ndarray]:
+        return [self.weights, self.biases]
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         activations = np.dot(x, self.weights) + self.biases
-        self._cached_activations = activations
+        self._cached_input = x
         return activations
 
     def backward(self, error: np.ndarray) -> np.ndarray:
         # Update the gradients
         self._bias_gradients = np.sum(error, 0)
-        self._weight_gradients = np.dot(self._cached_activations.T, error)
+        self._weight_gradients = np.dot(self._cached_input.T, error)
         return np.dot(error, self.weights.T)
 
 
@@ -69,14 +75,6 @@ class Sigmoid(Activation):
     @staticmethod
     def _sigmoid(x: np.ndarray) -> np.ndarray:
         return 1 / (1 + np.exp(-x))
-
-    @property
-    def trainable(self) -> bool:
-        return False
-
-    @property
-    def gradient(self):
-        return []
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """Compute the logistic function for a given input x.
@@ -118,14 +116,6 @@ class Tanh(Activation):
     def __init__(self):
         self._cached_input = None
 
-    @property
-    def trainable(self) -> bool:
-        return False
-
-    @property
-    def gradient(self):
-        return []
-
     @staticmethod
     def _tanh(x: np.ndarray) -> np.ndarray:
         return -1 + 2 / (1 + np.exp(-2 * x))
@@ -165,14 +155,6 @@ class ReLU(Activation):
 
     def __init__(self):
         self.cached_input = None
-
-    @property
-    def trainable(self) -> bool:
-        return False
-
-    @property
-    def gradient(self):
-        return []
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """Rectified Linear Unit.
