@@ -7,6 +7,10 @@ import numpy as np
 
 class Cost(ABC):
 
+    @property
+    def trainable(self) -> bool:
+        return False
+
     @abstractmethod
     def loss(self, output: np.ndarray, target: np.ndarray) -> np.ndarray:
         pass
