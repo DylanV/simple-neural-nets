@@ -16,7 +16,7 @@ class Cost(ABC):
         pass
 
     @abstractmethod
-    def forward(self, x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
         pass
 
     @abstractmethod
@@ -42,7 +42,7 @@ class MSE(Cost):
         """
         return (1 / 2) * np.sum((output - target) ** 2)
 
-    def forward(self, x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray, mode='eval') -> np.ndarray:
         """MSE final layer does nothing to the activations."""
         return x
 

@@ -6,16 +6,15 @@ class Sequential:
         self.layers = [*layers]
         self.parameters = [layer.parameters for layer in self.layers if layer.trainable]
 
-    def forward(self, batch):
+    def forward(self, batch, mode='eval'):
         activation = batch
         for layer in self.layers:
-            activation = layer.forward(activation)
+            activation = layer.forward(activation, mode)
 
         return activation
 
     def backward(self, batch, targets):
-
-        output = self.forward(batch)  # Forward pass
+        output = self.forward(batch, mode='train')  # Forward pass
         loss = self.layers[-1].loss(output, targets)  # Calculate loss with output layer
         error = self.layers[-1].backward(output, targets)  # Get starting error from output layer
         for layer in reversed(self.layers[:-1]):

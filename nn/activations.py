@@ -1,7 +1,7 @@
 """Nonlinear activation functions."""
 
 from abc import ABC, abstractmethod
-from typing import Union, List
+from typing import List
 
 import numpy as np
 
@@ -23,7 +23,7 @@ class Activation(ABC):
         return []
 
     @abstractmethod
-    def forward(self, x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
         pass
 
     @abstractmethod
@@ -54,7 +54,7 @@ class Linear(Activation):
     def parameters(self) -> List[np.ndarray]:
         return [self.weights, self.biases]
 
-    def forward(self, x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
         activations = np.dot(x, self.weights) + self.biases
         self._cached_input = x
         return activations
@@ -76,12 +76,14 @@ class Sigmoid(Activation):
     def _sigmoid(x: np.ndarray) -> np.ndarray:
         return 1 / (1 + np.exp(-x))
 
-    def forward(self, x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
         """Compute the logistic function for a given input x.
 
         Parameters
         ----------
         x : ndarray of float
+        mode : {'eval', 'train'}
+            Whether the model is in training or not
 
         Returns
         -------
@@ -120,12 +122,14 @@ class Tanh(Activation):
     def _tanh(x: np.ndarray) -> np.ndarray:
         return -1 + 2 / (1 + np.exp(-2 * x))
 
-    def forward(self, x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
         """Compute the nonlinear tanh function for the input x.
 
         Parameters
         ----------
         x : ndarray of float
+        mode : {'eval', 'train'}
+            Whether the model is in training or not
 
         Returns
         -------
@@ -156,13 +160,15 @@ class ReLU(Activation):
     def __init__(self):
         self.cached_input = None
 
-    def forward(self, x: np.ndarray) -> np.ndarray:
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
         """Rectified Linear Unit.
         Computes max(0, x) i.e. negative values of x are set to zero.
 
         Parameters
         ----------
         x : ndarray of float
+        mode : {'eval', 'train'}
+            Whether the model is in training or not
 
         Returns
         -------
