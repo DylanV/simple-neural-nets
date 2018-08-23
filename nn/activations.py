@@ -1,6 +1,7 @@
 """Nonlinear activation functions."""
 
 from abc import ABC, abstractmethod
+from typing import Union, List
 
 import numpy as np
 
@@ -12,6 +13,11 @@ class Activation(ABC):
     @property
     @abstractmethod
     def trainable(self) -> bool:
+        pass
+
+    @property
+    @abstractmethod
+    def gradient(self) -> List[Union[None, np.ndarray]]:
         pass
 
     @abstractmethod
@@ -38,6 +44,10 @@ class Linear(Activation):
     def trainable(self) -> bool:
         return True
 
+    @property
+    def gradient(self) -> List[np.ndarray]:
+        return [self._weight_gradients, self._bias_gradients]
+
     def forward(self, x: np.ndarray) -> np.ndarray:
         activations = np.dot(x, self.weights) + self.biases
         self._cached_activations = activations
@@ -63,6 +73,10 @@ class Sigmoid(Activation):
     @property
     def trainable(self) -> bool:
         return False
+
+    @property
+    def gradient(self):
+        return []
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """Compute the logistic function for a given input x.
@@ -108,6 +122,10 @@ class Tanh(Activation):
     def trainable(self) -> bool:
         return False
 
+    @property
+    def gradient(self):
+        return []
+
     @staticmethod
     def _tanh(x: np.ndarray) -> np.ndarray:
         return -1 + 2 / (1 + np.exp(-2 * x))
@@ -151,6 +169,10 @@ class ReLU(Activation):
     @property
     def trainable(self) -> bool:
         return False
+
+    @property
+    def gradient(self):
+        return []
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """Rectified Linear Unit.
