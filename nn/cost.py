@@ -40,7 +40,7 @@ class MSE(Cost):
         error : ndarray of float
 
         """
-        return (1 / 2) * (output - target) ** 2
+        return (1 / 2) * np.sum((output - target) ** 2)
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         """MSE final layer does nothing to the activations."""
