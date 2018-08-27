@@ -18,6 +18,7 @@ then `activate nn` or `source activate nn` to activate the environment
 * Mean squared error (MSE)
 ### Optimization
 * Mini-batch Stochastic Gradient Descent (SGD)
+* SGD with momentum
 ### Regularisation
 * L1
 * L2
