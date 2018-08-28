@@ -1,7 +1,7 @@
 """Nonlinear activation functions."""
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -15,12 +15,12 @@ class Activation(ABC):
         return False
 
     @property
-    def gradients(self) -> List[np.ndarray]:
-        return []
+    def gradients(self) -> Optional[np.ndarray]:
+        return None
 
     @property
-    def parameters(self) -> List[np.ndarray]:
-        return []
+    def parameters(self) -> Optional[np.ndarray]:
+        return None
 
     @abstractmethod
     def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
@@ -45,12 +45,12 @@ class Linear(Activation):
         return True
 
     @property
-    def gradients(self) -> List[np.ndarray]:
-        return [self._weight_gradients]
+    def gradients(self) -> np.ndarray:
+        return self._weight_gradients
 
     @property
-    def parameters(self) -> List[np.ndarray]:
-        return [self.weights]
+    def parameters(self) -> np.ndarray:
+        return self.weights
 
     def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
         # Add the bias ones to the input for the bias trick

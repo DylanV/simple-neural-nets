@@ -30,16 +30,15 @@ class SGD:
                 # Exponential moving average of the loss
                 current_loss = 0.01 * loss + (1 - 0.99) * current_loss if loss != 0 else loss
                 # Update the parameters
-                for i in range(len(gradients)):
-                    delta = learning_rate / batch_size
-                    for param, grad in zip(self.parameters[i], gradients[i]):
-                        # Do any regularization
-                        if regulariser == 'L1':
-                            param -= delta * regularisation_weight * np.sign(param)
-                        elif regulariser == 'L2':
-                            param -= regularisation_weight * delta * param
-                        # Step down the gradient
-                        param -= delta * grad
+                delta = learning_rate / batch_size
+                for param, grad in zip(self.parameters, gradients):
+                    # Do any regularization
+                    if regulariser == 'L1':
+                        param -= delta * regularisation_weight * np.sign(param)
+                    elif regulariser == 'L2':
+                        param -= regularisation_weight * delta * param
+                    # Step down the gradient
+                    param -= delta * grad
             sleep(0.01)  # Tiny sleep so the progress bar updates correctly
             print(f'Epoch {self.num_epochs:2d}: {current_loss:0.2e}')
 
