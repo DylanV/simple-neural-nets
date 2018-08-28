@@ -190,3 +190,24 @@ class ReLU(Activation):
 
         """
         return error * np.asarray(self.cached_input >= 0, np.float)
+
+
+class Dropout(Activation):
+
+    def __init__(self, probability):
+        self.cached_input = None
+        self.probability = probability
+
+    @property
+    def trainable(self) -> bool:
+        return False
+
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
+        if mode == 'eval':
+            return x
+        elif mode == 'train':
+            dropout_mask = (np.random.rand(*x.shape) < self.probability) / self.probability
+            return x * dropout_mask
+
+    def backward(self, x: np.ndarray) -> np.ndarray:
+        return x
