@@ -35,12 +35,10 @@ class Linear(Activation):
     """Linear layer"""
 
     def __init__(self, in_size: int, out_size: int, initialisation_method: str='xavier-average'):
-        self.weights = initialise_weights((in_size, out_size), method=initialisation_method)
-        self.biases = np.zeros((1, out_size))
+        self.weights = initialise_weights((in_size+1, out_size), method=initialisation_method)
 
         self._cached_input = None
         self._weight_gradients = np.zeros(self.weights.shape)
-        self._bias_gradients = np.zeros(self.biases.shape)
 
     @property
     def trainable(self) -> bool:
@@ -48,22 +46,23 @@ class Linear(Activation):
 
     @property
     def gradients(self) -> List[np.ndarray]:
-        return [self._weight_gradients, self._bias_gradients]
+        return [self._weight_gradients]
 
     @property
     def parameters(self) -> List[np.ndarray]:
-        return [self.weights, self.biases]
+        return [self.weights]
 
     def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
-        activations = np.dot(x, self.weights) + self.biases
-        self._cached_input = x
+        # Add the bias ones to the input for the bias trick
+        self._cached_input = np.hstack((np.ones((x.shape[0], 1)), x))
+        activations = np.dot(self._cached_input, self.weights)
         return activations
 
     def backward(self, error: np.ndarray) -> np.ndarray:
         # Update the gradients
-        self._bias_gradients = np.sum(error, 0)
         self._weight_gradients = np.dot(self._cached_input.T, error)
-        return np.dot(error, self.weights.T)
+        # Propagate back through all the weights except the bias weights
+        return np.dot(error, self.weights.T)[:, 1:]
 
 
 class Sigmoid(Activation):
