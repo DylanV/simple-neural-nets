@@ -19,6 +19,7 @@ then `activate nn` or `source activate nn` to activate the environment
 ### Optimization
 * Mini-batch Stochastic Gradient Descent (SGD)
 * SGD with momentum
+* SGD with Nesterov momentum
 ### Regularisation
 * L1
 * L2
