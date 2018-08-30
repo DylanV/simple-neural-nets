@@ -16,6 +16,7 @@ then `activate nn` or `source activate nn` to activate the environment
 * Rectified Linear Unit (ReLU) 
 ### Cost/Loss Functions
 * Mean squared error (MSE)
+* Softmax / Cross entropy
 ### Optimization
 * Mini-batch Stochastic Gradient Descent (SGD)
 * SGD with momentum
