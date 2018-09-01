@@ -10,13 +10,6 @@ then `activate nn` or `source activate nn` to activate the environment
 * Generic fully connected networks with arbitrary layers.
 * Finite difference gradient checker.
 * Unit tests, most individual components are unit tested.
-### Activations
-* Sigmoid (logistic)
-* Tanh
-* Rectified Linear Unit (ReLU) 
-### Cost/Loss Functions
-* Mean squared error (MSE)
-* Softmax / Cross entropy
 ### Optimization
 * Mini-batch Stochastic Gradient Descent (SGD)
 * SGD with momentum
@@ -24,12 +17,17 @@ then `activate nn` or `source activate nn` to activate the environment
 * Adagrad
 * RMSProp
 * Adam
+### Activations
+* Sigmoid (logistic)
+* Tanh
+* Rectified Linear Unit (ReLU) 
+### Cost/Loss Functions
+* Mean squared error (MSE)
+* Softmax / Cross entropy
 ### Regularisation
-* L1
-* L2
+* L1 / L2 (Weight decay)
 * Dropout
 ### Weight initialisation
-* Random
 * Xavier
 * He
 ### Data loaders
