@@ -84,7 +84,8 @@ class SoftmaxCrossEntropy(Cost):
 
     def forward(self, x: np.ndarray, mode='eval') -> np.ndarray:
         """MSE final layer does nothing to the activations."""
-        norm = np.sum(x, axis=1)[:, np.newaxis] + 1e-16
+        x += 1e-8
+        norm = np.sum(x, axis=1)[:, np.newaxis]
         return x / norm
 
     def backward(self, output: np.ndarray, target: np.ndarray) -> np.ndarray:
