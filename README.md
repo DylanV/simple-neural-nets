@@ -23,6 +23,7 @@ then `activate nn` or `source activate nn` to activate the environment
 * SGD with Nesterov momentum
 * Adagrad
 * RMSProp
+* Adam
 ### Regularisation
 * L1
 * L2
