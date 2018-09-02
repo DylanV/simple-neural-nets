@@ -8,6 +8,12 @@ from urllib.request import urlretrieve
 import numpy as np
 
 
+def one_hot_encode(labels):
+    num_samples = labels.shape[0]
+    y = np.zeros((num_samples, 10))
+    y[np.arange(num_samples), labels] = 1
+    return y
+
 class MNISTLoader:
 
     def __init__(self, data_cache_dir: str = os.path.join(os.getcwd(), 'data', 'mnist')):
@@ -79,7 +85,10 @@ class MNISTLoader:
         data = self._load_idx_file(os.path.join(self.data_cache_dir, self.train_images_filename)) / 255
         labels = self._load_idx_file(os.path.join(self.data_cache_dir, self.train_labels_filename))
 
-        return data, labels
+        X = data.reshape(data.shape[0], -1)
+        y = one_hot_encode(labels)
+
+        return X, y
 
     def get_test_set(self) -> Tuple[np.ndarray, np.ndarray]:
         """ Load the MNISt test set
@@ -95,7 +104,10 @@ class MNISTLoader:
         data = self._load_idx_file(os.path.join(self.data_cache_dir, self.test_images_filename)) / 255
         labels = self._load_idx_file(os.path.join(self.data_cache_dir, self.test_labels_filename))
 
-        return data, labels
+        X = data.reshape(data.shape[0], -1)
+        y = one_hot_encode(labels)
+
+        return X, y
 
     def get_train_and_test_set(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Get the train and test datasets
