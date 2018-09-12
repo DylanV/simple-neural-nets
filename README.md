@@ -58,6 +58,7 @@ Which gives us more the 90% accuracy
 ### Regularisation
 * L1 / L2 (Weight decay)
 * Dropout
+* Batch norm
 ### Weight initialisation
 * Xavier
 * He

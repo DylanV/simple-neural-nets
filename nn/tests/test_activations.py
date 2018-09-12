@@ -72,7 +72,7 @@ def test_relu():
     npt.assert_array_equal(relu.forward(x), y)
 
 
-def test_relu_derivative():
+def test_relu_backward():
     relu = ReLU()
 
     relu.forward(np.full((3, ), -1))

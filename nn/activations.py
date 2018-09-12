@@ -211,3 +211,70 @@ class Dropout(Activation):
 
     def backward(self, x: np.ndarray) -> np.ndarray:
         return x
+
+
+class BatchNorm(Activation):
+
+    def __init__(self, D, momentum=0.9):
+        self.batch_mean = None
+        self.batch_var = None
+
+        self.running_mean = None
+        self.running_var = None
+        self.momentum = momentum
+
+        self.gamma_beta = np.vstack((np.ones(D), np.zeros(D)))
+        self.gamma_beta_grad = np.zeros(self.gamma_beta.shape)
+
+        self.eps = 1e-8
+        self.cached_input = None
+
+    @property
+    def trainable(self) -> bool:
+        return True
+
+    @property
+    def parameters(self):
+        return self.gamma_beta
+
+    @property
+    def gradients(self):
+        return self.gamma_beta_grad
+
+    def forward(self, x: np.ndarray, mode: str='eval') -> np.ndarray:
+
+        gamma = self.gamma_beta[0, :]
+        beta = self.gamma_beta[1, :]
+        self.cached_input = x
+
+        if mode == 'eval':
+            if self.running_mean is None:
+                return x
+            return gamma * ((x - self.running_mean) / np.sqrt(self.running_var + self.eps)) + beta
+
+        if mode == 'train':
+            self.batch_mean = np.mean(x, axis=0)
+            self.batch_var = np.var(x, axis=0)
+
+            self.running_mean = self.batch_mean if self.running_mean is None else self.running_mean
+            self.running_mean = self.momentum * self.batch_mean + (1 - self.momentum) * self.running_mean
+            self.running_var = self.batch_var if self.running_var is None else self.running_var
+            self.running_var = self.momentum * self.batch_var + (1 - self.momentum) * self.running_var
+
+            return gamma * ((x - self.batch_mean) / np.sqrt(self.batch_var + self.eps)) + beta
+
+    def backward(self, error: np.ndarray):
+        tmp = error * (self.cached_input - self.batch_mean) * (self.batch_var + self.eps)**(-1/2)
+        self.gamma_beta_grad[0, :] = np.sum(tmp, axis=0)
+        self.gamma_beta_grad[1, :] = np.sum(error, axis=0)
+
+        BS, _ = error.shape
+        gamma = self.gamma_beta[0, :]
+        x = self.cached_input
+        x_mu = x - self.batch_mean
+        var_eps = self.batch_var + self.eps
+        dx = ((1/BS) * gamma * (var_eps ** (-1/2)) * BS * error - np.sum(error, 0)
+              - x_mu * var_eps ** (-1) * np.sum(error * x_mu, 0))
+        return dx
+
+
